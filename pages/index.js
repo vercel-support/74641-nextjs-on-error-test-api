@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+export default function Home({now}) {
   return (
     <div className={styles.container}>
       <Head>
@@ -15,6 +15,8 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+
+        <p>now is: {now}</p>
 
         <p className={styles.description}>
           Get started by editing{' '}
@@ -66,4 +68,21 @@ export default function Home() {
       </footer>
     </div>
   )
+}
+
+export async function getStaticProps() {
+
+  const res = await fetch('https://nextjs-time-api-2.vercel-support.app/api/time')
+  const data = await res.json()
+  console.log(data)
+
+  return {
+    props: {
+      now: data.now
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every 10 seconds
+    revalidate: 600, // In seconds
+  }
 }
